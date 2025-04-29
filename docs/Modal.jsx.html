@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Modal.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Modal.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState } from "react"
+import PropTypes from "prop-types"
+import "./Modal.scss"
+
+/**
+ * Modal component for displaying overlay dialogs with customizable header, content, and styles.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {boolean} props.isOpen - Determines whether the modal is currently open.
+ * @param {Function} props.onClose - Callback function to close the modal.
+ * @param {Object} props.modalElements - Elements to display inside the modal.
+ * @param {string} props.modalElements.title - Title text displayed at the top of the modal.
+ * @param {string} props.modalElements.subtitle - Subtitle text displayed below the title.
+ * @param {string} [props.modalElements.text] - Optional plain text message displayed in the body.
+ * @param {React.ReactNode} [props.modalElements.htmlElement] - Optional custom HTML or JSX to render inside the modal.
+ * @param {string} [props.modalElements.closeButtonText] - Text for the close button at the bottom of the modal (defaults to "Close").
+ * @param {Object} [props.modalOptions] - Optional styling and layout options.
+ * @param {string} [props.modalOptions.headerBackgroundColor] - Background color of the modal header.
+ * @param {string} [props.modalOptions.headerTextColor] - Text color of the modal header.
+ * @param {string} [props.modalOptions.backdropColor] - Background color of the modal backdrop.
+ * @param {boolean} [props.modalOptions.shadowed=true] - Whether a shadow effect is applied to the modal box.
+ * @param {number} [props.fadeDuration=300] - Duration of the fade-in and fade-out animations, in milliseconds.
+ *
+ * @example
+ * &lt;Modal
+ *   isOpen={true}
+ *   onClose={handleClose}
+ *   modalElements={{
+ *     title: "Success",
+ *     subtitle: "Employee created",
+ *     text: "Employee John Doe has been added.",
+ *     htmlElement: &lt;p>Additional custom content here&lt;/p>,
+ *     closeButtonText: "Dismiss"
+ *   }}
+ *   modalOptions={{
+ *     headerBackgroundColor: "#4CAF50",
+ *     headerTextColor: "#fff",
+ *     backdropColor: "rgba(0, 0, 0, 0.5)",
+ *     shadowed: true
+ *   }}
+ *   fadeDuration={500}
+ * />
+ */
+const Modal = ({
+  isOpen,
+  onClose,
+  modalElements,
+  modalOptions = {},
+  fadeDuration = 300,
+}) => {
+  const [visible, setVisible] = useState(isOpen)
+  const [fadeState, setFadeState] = useState("fade-in")
+
+  // Handle modal visibility and fade animations when `isOpen` changes
+  useEffect(() => {
+    if (isOpen) {
+      setVisible(true)
+      setFadeState("fade-in")
+    } else {
+      setFadeState("fade-out")
+      const timer = setTimeout(() => setVisible(false), fadeDuration)
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen, fadeDuration])
+
+  // Listen for "Escape" key to close the modal
+  useEffect(() => {
+    if (!visible) return
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        onClose()
+      }
+    }
+    document.addEventListener("keydown", handleEscape)
+    return () => document.removeEventListener("keydown", handleEscape)
+  }, [visible, onClose])
+
+  // Do not render the modal if not visible
+  if (!visible) return null
+
+  // Customize header style based on options
+  const headerStyle = {
+    backgroundColor: modalOptions.headerBackgroundColor,
+    color: modalOptions.headerTextColor,
+  }
+
+  return (
+    &lt;div
+      className={`modal-backdrop ${fadeState}`}
+      style={{
+        backgroundColor: modalOptions.backdropColor || "rgba(0,0,0,0.7)",
+        transitionDuration: `${fadeDuration}ms`,
+      }}
+      // Close modal when clicking outside the content
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose()
+        }
+      }}
+    >
+      &lt;div
+        className={`modal-content ${modalOptions.shadowed !== false ? "shadowed" : ""}`}
+        style={{ transitionDuration: `${fadeDuration}ms` }}
+        role="dialog"
+        aria-modal="true"
+      >
+        {/* Modal header with title and close button */}
+        &lt;div className="modal-header" style={headerStyle}>
+          &lt;h2 className="modal-title">{modalElements.title}&lt;/h2>
+          &lt;button className="modal-close" onClick={onClose} aria-label="Close modal">
+            &amp;times;
+          &lt;/button>
+        &lt;/div>
+
+        {/* Modal subtitle */}
+        &lt;h3 className="modal-subtitle">{modalElements.subtitle}&lt;/h3>
+
+        {/* Optional plain text section */}
+        {modalElements.text &amp;&amp; (
+          &lt;p className="modal-text">{modalElements.text}&lt;/p>
+        )}
+
+        {/* Optional custom HTML or JSX section */}
+        &lt;div className="modal-htmlElement">
+          {modalElements.htmlElement}
+        &lt;/div>
+
+        {/* Bottom close button */}
+        &lt;button
+          className="modal-button-close"
+          onClick={onClose}
+          style={headerStyle}
+        >
+          {modalElements.closeButtonText || "Close"}
+        &lt;/button>
+      &lt;/div>
+    &lt;/div>
+  )
+}
+
+Modal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  modalElements: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    subtitle: PropTypes.string.isRequired,
+    text: PropTypes.string,
+    htmlElement: PropTypes.node,
+    closeButtonText: PropTypes.string,
+  }).isRequired,
+  modalOptions: PropTypes.shape({
+    headerBackgroundColor: PropTypes.string,
+    headerTextColor: PropTypes.string,
+    backdropColor: PropTypes.string,
+    shadowed: PropTypes.bool,
+  }),
+  fadeDuration: PropTypes.number,
+}
+
+export default Modal
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Modal">Modal</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Apr 28 2025 18:02:48 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

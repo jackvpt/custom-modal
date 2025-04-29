@@ -1,0 +1,38 @@
+{
+  "name": "jackvpt-custom-modal",
+  "version": "1.0.6",
+  "description": "Custom modal created with React and Vite",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
+
+  "scripts": {
+    "build": "vite build",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "component",
+    "modal",
+    "vite"
+  ],
+  "author": "jackvpt",
+  "license": "MIT",
+  "dependencies": {
+    "jsdoc": "^4.0.4",
+    "prop-types": "^15.8.1",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "sass": "^1.86.3"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
