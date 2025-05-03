@@ -14,6 +14,21 @@ A customizable and accessible **modal (dialog)** component built with **React**,
 
 ---
 
+## 🔧 Prerequisites
+Before using this component, make sure your project meets the following requirements:
+
+✅ Uses React version 17, 18, or 19
+
+✅ Has ReactDOM installed
+
+✅ Includes PropTypes (already included in the package if you're using a bundler)
+
+✅ Supports CSS or SCSS handling (via Vite, Webpack, or CRA)
+
+✅ Accepts peer dependencies (ensure that react and react-dom are not duplicated in node_modules)
+
+---
+
 ## 📦 Installation
 
 Clone or copy the `Modal` component into your project
