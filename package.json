@@ -1,12 +1,14 @@
 {
   "name": "jackvpt-custom-modal",
-  "version": "1.0.32",
+  "version": "1.0.40",
   "description": "Custom Modal",
   "main": "dist/jackvpt-custom-modal.cjs",
   "module": "dist/jackvpt-custom-modal.js",
   "files": [
-    "dist"
+    "dist",
+    "jackvpt-custom-modal.d.ts"  
   ],
+  "types": "jackvpt-custom-modal.d.ts", 
   "scripts": {
     "dev": "vite",
     "build": "vite build",
