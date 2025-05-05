@@ -1,18 +1,25 @@
 {
   "name": "jackvpt-custom-modal",
-  "version": "1.0.40",
+  "version": "1.0.41",
   "description": "Custom Modal",
   "main": "dist/jackvpt-custom-modal.cjs",
   "module": "dist/jackvpt-custom-modal.js",
   "files": [
     "dist",
-    "jackvpt-custom-modal.d.ts"  
+    "jackvpt-custom-modal.d.ts"
   ],
-  "types": "jackvpt-custom-modal.d.ts", 
+  "types": "jackvpt-custom-modal.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/jackvpt-custom-modal.cjs",
+      "import": "./dist/jackvpt-custom-modal.js",
+      "types": "./jackvpt-custom-modal.d.ts"
+    }
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
